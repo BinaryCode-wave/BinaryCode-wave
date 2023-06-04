@@ -34,3 +34,9 @@ Sigue los pasos a continuación para instalar las dependencias necesarias:
     ```bash
     pip install -r requirements.txt
     ```
+
+## Ejecución
+
+```bash
+python ./app/app.py
+ ```
