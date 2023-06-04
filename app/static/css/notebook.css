@@ -1,0 +1,8 @@
+pre {
+  background-color: gainsboro;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
