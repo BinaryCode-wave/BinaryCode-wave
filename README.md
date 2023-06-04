@@ -20,5 +20,17 @@ Sigue los pasos a continuación para instalar las dependencias necesarias:
     ```
 2. Ve al directorio del proyecto:
 
+    ```bash
+    cd BinaryCode-wave
+    ```
+3. Crea un entorno virtual (opcional pero recomendado):
 
+    ```bash
+    virtualenv env
+    source env/bin/activate
+    ```
+4. Instala las dependencias utilizando `pip` y el archivo `requirements.txt`:
 
+    ```bash
+    pip install -r requirements.txt
+    ```
