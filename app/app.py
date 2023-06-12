@@ -1,9 +1,32 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
+import time
+import src.services.YoutubeMethods
 import nbformat
 from nbconvert import HTMLExporter
 from src.process import process_dataframe
 
 app = Flask(__name__)
+
+songs = []
+def get_data():
+    list = [{'name': 'Daniel', 'url': 'https://www.youtube.com/watch?v=bBB-VAHYi7c'}, {'name': 'Jorge', 'url': 'https://www.youtube.com/watch?v=gqmwtVey3Cs'}, {'name': 'Luis', 'url': 'https://www.youtube.com/watch?v=z7pVGZwghZE'}, {'name': 'Carlos', 'url': 'https://www.youtube.com/watch?v=-3vwrzqkMgU'}]
+    time.sleep(2)
+    if len(songs) > 0: songs.clear()
+    for item in list:
+        songs.append(item['url'])
+    return jsonify(list)
+
+@app.route('/data', methods=['POST'])
+def data():
+    value = request.args.get('value')
+    list = get_data()
+    return list
+
+@app.route('/create_playlist', methods=['POST'])
+def create_playlist():
+    playlist_id = src.services.YoutubeMethods.init(songs)
+    print('Creating playlist...')
+    return jsonify(playlist_id)
 
 @app.route('/')
 def index():
