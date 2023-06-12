@@ -1,0 +1,328 @@
+{% extends './base.html' %} {% block title %}Documentation{% endblock %} {%
+block content %}
+
+<div>
+  <div class="doc-header">
+    <div class="back-btn">
+      <a href="/">⬅️ Volver</a>
+    </div>
+    <h1 class="doc-title">MUSIC MATCH DOCUMENTATION🎵</h1>
+  </div>
+  <div class="doc-main">
+    <div class="intro">
+      <h2>1. Introducción</h2>
+      <p>
+        En esta documentación se explicará, todos los pasos que se realizan para
+        poder brindar recomendaciones de música personalizadas. Como lenguaje de
+        programación usamos Python con el framework Flask para web. Y para el
+        desarrollo del programa hacemos uso de Grafos y el Algoritmo de Dijkstra
+      </p>
+    </div>
+
+    <div class="data">
+      <div class="data-container">
+        <h2>2. Conjunto de Datos</h2>
+        <p>
+          La muestra contiene un total de 26 variables para cada una de las
+          canciones, entre las cuales se encuentran: el nombre de la canción, el
+          nombre del artista, el enlace de la canción en Spotify y su
+          correspondiente álbum, la duración de la canción, el tempo, la
+          tonalidad, la energía, la valencia, la instrumentación, la presencia
+          de público en la grabación, el número de streams y el enlace al video
+          de Youtube.
+          <br />
+          A continuación, se presenta una tabla con las variables de la muestra
+          y su correspondiente descripción ⬇️ ⬇️ ⬇️
+        </p>
+      </div>
+
+      <div class="table-container">
+        <table class="minimal-table">
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="var">Track</td>
+              <td>
+                Nombre de la canción, tal como aparece en la plataforma de
+                Spotify
+              </td>
+            </tr>
+            <tr>
+              <td class="var">Artist</td>
+              <td>Nombre del artista de la canción</td>
+            </tr>
+            <tr>
+              <td class="var">Url_spotify</td>
+              <td>Enlace de la canción en la plataforma de Spotify</td>
+            </tr>
+            <tr>
+              <td class="var">Album</td>
+              <td>
+                Álbum en el que se encuentra la canción en la plataforma de
+                Spotify
+              </td>
+            </tr>
+            <tr>
+              <td class="var">Danceability</td>
+              <td>
+                Describe la adecuación de una canción para bailar, basada en una
+                combinación de elementos musicales que incluyen el tempo, la
+                estabilidad rítmica, la fuerza del ritmo y la regularidad en
+                general
+              </td>
+            </tr>
+            <tr>
+              <td class="var">Loudness</td>
+              <td>La sonoridad general de una canción en decibelios (dB)</td>
+            </tr>
+            <tr>
+              <td class="var">Speechiness</td>
+              <td>Detecta la presencia de palabras habladas en una canción</td>
+            </tr>
+            <tr>
+              <td class="var">Acousticness</td>
+              <td>
+                Una medida de confianza de 0.0 a 1.0 de si la canción es
+                acústica
+              </td>
+            </tr>
+            <tr>
+              <td class="var">Instrumentalness</td>
+              <td>Predice si una canción no contiene voces</td>
+            </tr>
+            <tr>
+              <td class="var">Liveness</td>
+              <td>Detecta la presencia de público en la grabación</td>
+            </tr>
+            <tr>
+              <td class="var">Valence</td>
+              <td>
+                Una medida de 0.0 a 1.0 que describe la positividad musical
+                transmitida por una canción
+              </td>
+            </tr>
+            <tr>
+              <td class="var">Tempo</td>
+              <td>
+                El tempo estimado general de una canción en beats por minuto
+                (BPM)
+              </td>
+            </tr>
+            <tr>
+              <td class="var">Url_youtube</td>
+              <td>Enlace al video musical de la canción en Youtube</td>
+            </tr>
+            <tr>
+              <td class="var">Views</td>
+              <td>Número de vistas del video</td>
+            </tr>
+            <tr>
+              <td class="var">Likes</td>
+              <td>Número de "me gusta" del video</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="process">
+      <h2>3. Procesamiento de datos</h2>
+      <p>
+        Filtramos los datos provenientes del dataset, creando un dataframe
+        <strong><i>df</i></strong> y exportandolo con los datos a utilizar en el
+        programa.
+      </p>
+      <pre>
+        df = pd.read_csv(PATH, usecols=[1, 3, 4, 7, 10, 11, 12, 13, 14, 15, 16], header = 0, nrows = NROWS)
+        df.head(NROWS)
+        df.to_csv(EXPORT, index=True)
+      </pre>
+      <p>
+        Se define una lista llamada <strong><i>features</i></strong> que
+        contiene los nombres de las características que se desea normalizar.
+      </p>
+      <pre>
+        features = ['Danceability', 'Loudness', 'Speechiness', 'Acousticness', 'Instrumentalness', 'Liveness', 'Valence', 'Tempo']
+      </pre>
+      <p>
+        Se crea un objeto scaler utilizando la clase
+        <strong><i>MinMaxScaler</i></strong
+        >. A continuación, se aplica la normalización a las columnas
+        especificadas en el dataframe <strong><i>df</i></strong> utilizando el
+        método <strong><i>fit_transform()</i></strong> del objeto
+        <strong><i>scaler</i></strong
+        >. Este método calcula los valores mínimo y máximo de cada columna y
+        transforma los valores originales a un rango entre 0 y 1 basado en esos
+        valores mínimos y máximos.
+      </p>
+      <pre>
+        scaler = MinMaxScaler()
+        df[features] = scaler.fit_transform(df[features])
+      </pre>
+    </div>
+
+    <div class="graph">
+      <h2>4. Creación del Grafo</h2>
+      <p>
+        Para la creación del grafo que utilizaremos para brindar las
+        recomendaciones personalizadas de música, se hizo el siguiente
+        procedimiento:
+        <br />
+        Creamos un grafo vacío y le añadimos los nodos, que en este caso serían
+        el titulo de la canción.
+      </p>
+      <pre>
+        # Crea un grafo vacío
+        G = nx.Graph()
+
+        # Agrega los nodos al grafo
+        for i in range(len(df)):
+          G.add_node(i, track=df.loc[i, 'Track']) 
+      </pre>
+      <div class="img-container">
+        <img
+          src="static/img/graph_nodos.png"
+          alt="grafo con nodos"
+          id="graph_nodos"
+        />
+      </div>
+      <p>
+        Para agregar las aristas al grafo, implementaremos un doble bucle para
+        iterar sobre los elementos del dataframe <strong><i>df</i></strong> En
+        cada iteración del bucle, se calcula la distancia euclidiana entre las
+        características de los elementos <strong><i>i</i></strong> y
+        <strong><i>j</i></strong> utilizando la función
+        <strong><i>euclidean_distances()</i></strong
+        ><br />
+      </p>
+      <pre>
+        for i in range(len(df)):
+        for j in range(i + 1, len(df)):
+            dist = euclidean_distances([features[i]], [features[j]])[0][0]
+            dist = 2 - dist
+            if dist > THRESHOLD:
+                G.add_edge(i, j, weight=round(dist, 3))
+      </pre>
+      <p>
+        La distancia se almacena en la variable <strong><i>dist</i></strong
+        >. Se realiza un ajuste en la distancia
+        <strong><i>dist</i></strong> restándoselo a 2.<br />
+        Se verifica si la distancia <strong><i>dist</i></strong> es mayor que un
+        umbral (THRESHOLD). Si cumple con la condición, se agrega una arista al
+        grafo <strong><i>G</i></strong> utilizando el método
+        <strong><i>add_edge()</i></strong
+        >. El peso de la arista se redondea a 3 decimales utilizando la función
+        <strong><i>round()</i></strong
+        >.
+      </p>
+      <div class="img-container">
+        <img
+          src="static/img/graph.png"
+          alt="grafo con nodos"
+          id="graph_nodos"
+        />
+      </div>
+    </div>
+
+    <div class="algorithm">
+      <h2>5. Implementación del algoritmo de Dijkstra</h2>
+      <p>
+        Para hallar la similitud entre canciones, se utiliza Dijkstra, el cual
+        es un algoritmo capaz de hallar el camino más corto entre nodos.
+      </p>
+      <pre>
+        def dijkstra(G, s):
+        n = len(G)
+        visited = [False] * n
+        path = [-1] * n
+        cost = [math.inf] * n
+
+        cost[s] = 0
+        pqueue = [(0, s)]
+        while pqueue:
+            g, u = hq.heappop(pqueue)
+            if not visited[u]:
+                visited[u] = True
+                for v in range(n):
+                    if G[u, v] > 0 and not visited[v]:
+                        f = g + G[u, v]
+                        if f < cost[v]:
+                            cost[v] = f
+                            path[v] = u
+                            hq.heappush(pqueue, (f, v))
+
+        return path, cost
+      </pre>
+      <p>Aplicamos el algoritmo al grafo.</p>
+      <pre>
+        path, cost = dijkstra(nx.to_numpy_array(G), 1)
+      </pre>
+      <div class="img-container">
+        <img
+          src="static/img/dijkstra.png"
+          alt="grafo con nodos"
+          id="graph_nodos"
+        />
+      </div>
+      <p>
+        Luego de aplicar Dijkstra, procedemos a armar un dataframe, el cual
+        contendrá todas las canciones con similitud.
+      </p>
+      <pre>
+        data = []
+        for i in range(len(path)):
+            if not math.isinf(cost[i]):  # Solo considerar las canciones que están conectadas
+                data.append({
+                    'Track': df.loc[i, 'Track'],  # Agregar la columna 'Track' del dataset original
+                    'Artist': df.loc[i, 'Artist'],  # Agregar la columna 'Artist' del dataset original
+                    'Url_youtube': df.loc[i, 'Url_youtube'],  # Agregar la columna 'Url_youtube' del dataset original
+                    'Path': path[i],
+                    'Cost': cost[i]
+                })
+
+        df_result = pd.DataFrame(data)
+      </pre>
+      <p>
+        Y se ordenará el dataframe de acuerdo con el camino encontrado por el
+        algoritmo de Dijkstra
+      </p>
+      <pre>
+        df_result = df_result.sort_values(by=['Cost'])
+        if print_df:
+          print(df_result)
+
+        df_result = df_result.sort_values(by=['Cost']).reset_index(drop=True)
+        df_result = df_result.drop(columns=['Cost', 'Path'])
+        if print_processed_df:
+          print(df_result)
+      </pre>
+    </div>
+    <div class="example">
+      <h2>6. Ejemplo de implementación</h2>
+      <p>A continuación se dará un ejemplo del uso del programa: </p>
+      <p>a. Elegir el valor de preferencia y darle click al botón <strong><i>Generate Playlist</i></strong></p>
+      <div class="img-container">
+        <img
+          src="static/img/step1.png"
+          alt="grafo con nodos"
+          id="graph_nodos"
+        />
+      </div>
+      <p>b. Se mostrará una lista de canciones con similitudes halladas por Dijkstra</p>
+      <div class="img-container">
+        <img
+          src="static/img/step2.png"
+          alt="grafo con nodos"
+          width="900px"
+        />
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</div>
+{% endblock %}

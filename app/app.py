@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import time
-import src.services.YoutubeMethods
+#import src.services.YoutubeMethods
 import nbformat
 from nbconvert import HTMLExporter
 from src.process import process_dataframe
@@ -31,6 +31,10 @@ def create_playlist():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/doc')
+def docs():
+    return render_template('doc.html')
 
 @app.route('/notebook')
 def notebook():
