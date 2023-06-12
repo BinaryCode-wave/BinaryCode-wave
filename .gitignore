@@ -302,4 +302,6 @@ fabric.properties
 .history
 .ionide
 
+token files
+YOUR_CLIENT_SECRET_FILE.json
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,flask,visualstudiocode
