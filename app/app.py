@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import nbformat
 from nbconvert import HTMLExporter
+from src.process import process_dataframe
 
 app = Flask(__name__)
 
@@ -22,5 +23,10 @@ def notebook():
     (body, _) = html_exporter.from_notebook_node(notebook)
 
     return render_template('notebook.html', body=body)
+
+@app.route('/songs')
+def songs():
+    df = process_dataframe(NROWS=80, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_df=False, print_processed_df=False)
+    return render_template('songs.html', data=df.to_json(orient='records'))
 if __name__ == '__main__':
     app.run(debug=True)
