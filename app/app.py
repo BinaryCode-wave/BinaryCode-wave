@@ -45,15 +45,14 @@ def notebook():
     
     # Convierte el notebook a HTML
     html_exporter = HTMLExporter()
-    #html_exporter.template_file = 'basic'  # Puedes usar otro template si lo deseas
-    #html_exporter.template_path.append('./app/templates')
     (body, _) = html_exporter.from_notebook_node(notebook)
 
     return render_template('notebook.html', body=body)
 
-@app.route('/songs')
+@app.route('/songs', methods=['POST'])
 def songs():
-    df = process_dataframe(NROWS=80, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_df=False, print_processed_df=False)
+    prefence_value = request.form.get('preference_value')
+    df = process_dataframe(THRESHOLD=float(prefence_value))
     return render_template('songs.html', data=df.to_json(orient='records'))
 if __name__ == '__main__':
     app.run(debug=True)

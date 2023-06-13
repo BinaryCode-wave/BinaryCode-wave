@@ -8,7 +8,7 @@ import math
 
 def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_df=False, print_processed_df=False):
     # Leer el archivo CSV
-    df = pd.read_csv(PATH, usecols=[1, 3, 4, 7, 10, 11, 12, 13, 14, 15, 16, 18], header=0, nrows=NROWS)
+    df = pd.read_csv(PATH, usecols=[0, 1, 3, 4, 7, 10, 11, 12, 13, 14, 15, 16, 18], header=0, nrows=NROWS)
 
     # Seleccionamos las características que vamos a utilizar
     features = ['Danceability', 'Loudness', 'Speechiness', 'Acousticness',
@@ -66,6 +66,7 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
     for i in range(len(path)):
         if not math.isinf(cost[i]):  # Solo considerar las canciones que están conectadas
             data.append({
+                'Id': i,  # Agregar la columna 'Id' del dataset original
                 'Track': df.loc[i, 'Track'],  # Agregar la columna 'Track' del dataset original
                 'Artist': df.loc[i, 'Artist'],  # Agregar la columna 'Artist' del dataset original
                 'Url_youtube': df.loc[i, 'Url_youtube'],  # Agregar la columna 'Url_youtube' del dataset original
