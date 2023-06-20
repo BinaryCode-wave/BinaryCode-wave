@@ -7,6 +7,13 @@ function create_table(data) {
     });
 }
 
+/* document.getElementById("create_table").addEventListener("click", () => {
+    value = document.getElementById("customRange2").value;
+    fetch("/notebook", {
+        method: "GET",
+    });
+}); */
+
 document.getElementById("create_table").addEventListener("click", () => {
     value = document.getElementById("customRange2").value;
     fetch("/data?value=" + value, {
@@ -23,45 +30,33 @@ document.getElementById("create_table").addEventListener("click", () => {
 
 /* Create Playlist */
 
-var player;
-
 async function create_playlist() {
     const response = await fetch("/create_playlist", { method: "POST" });
     const id = await response.json();
     return id;
 }
+
 let playlistId = "";
 document.getElementById("make_playlist").addEventListener("click", () => {
     create_playlist().then((id) => {
         playlistId = id;
-        document.addEventListener("DOMContentLoaded", cargarAPI);
-
-        player = new YT.Player('player', {
-            height: '150px',
-            width: '150px',
-            playerVars: {
-                listTyoe: 'playlist',
-                list: playlistId,
-            }
-        });
-
-        document.getElementById("reproductor").style.display = "block";
+        document.addEventListener("DOMContentLoaded", cargarAPI());
+        console.log(playlistId)
     });
 });
-
 /* Youtube Section */
-function cargarAPI() {
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-}
+var prevTrackBtn = document.getElementById("prev");
+var nextTrackBtn = document.getElementById("next");
+var actual_track_name = document.getElementById("song-name");
+var actual_track_author = document.getElementById("song-author");
+var track_img = document.getElementById("track-img");
+var playBtn = document.getElementById("play");
 
-function reproducirVideo() {
+function playTrack() {
     player.playVideo();
 }
 
-function pausarVideo() {
+function pauseTrack() {
     player.pauseVideo();
 }
 
@@ -69,10 +64,74 @@ function nextVideo() {
     player.nextVideo();
 }
 
-function previousVideo() {
+function prevVideo() {
     player.previousVideo();
 }
 
-document.getElementById("reproducir").addEventListener("click", reproducirVideo);
-document.getElementById("pausar").addEventListener("click", pausarVideo);
-document.getElementById("siguiente").addEventListener("click", nextVideo);
+playBtn.addEventListener("click", () => {
+    playBtn.classList.toggle("running");
+    toggleFunction(playBtn.classList.contains("running"));
+
+    function toggleFunction(isRunning) {
+        if (isRunning) {
+            playTrack();
+        } else {
+            pauseTrack();
+        }
+    }
+});
+
+var player;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        playerVars: {
+            listTyoe: 'playlist',
+            list: playlistId
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+    document.getElementById("reproductor").style.display = "block";
+}
+
+function cargarAPI() {
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+
+function getTrackData() {
+    return new Promise((resolve, reject) => {
+        var videoData = player.getVideoData();
+        console.log(videoData)
+        var videoTitle = videoData.title;
+        var videoId = videoData.video_id;
+        var thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/maxresdefault.jpg";
+        actual_track_name.textContent = videoTitle;
+        actual_track_author.textContent = videoData.author;
+        track_img.src = thumbnailUrl;
+        resolve();
+    });
+}
+
+function onPlayerReady() {
+    getTrackData().then(() => {
+        prevTrackBtn.addEventListener("click", () => {
+            prevVideo();
+        });
+        nextTrackBtn.addEventListener("click", () => {
+            nextVideo();
+        });
+    });
+}
+
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+        getTrackData();
+    }
+}

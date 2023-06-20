@@ -1,6 +1,13 @@
-<div id="reproductor" style="display: none;">
-    <button id="reproducir">Reproducir video</button>
-    <button id="pausar">Pausar video</button>
-    <button id="siguiente">Siguiente video</button>
-    <div id="player">
+<div id="music_player">
+    <img id = "track-img" class="track-img" src="{{ url_for('static', filename='img/disc.png') }}" alt="track image">
+    <div id="player"></div>
+    <div class="track-info">
+        <h2 id="song-name">...</h2>
+        <p id="song-author">...</p>
+    </div>
+    <div class="controls">
+        <button class="playerBtn" id="prev"></button>
+        <button class="playerBtn" id="play"></button>
+        <button class="playerBtn" id="next"></button>
+    </div>
 </div>

@@ -23,7 +23,8 @@ def data():
 
 @app.route('/create_playlist', methods=['POST'])
 def create_playlist():
-    playlist_id = src.services.YoutubeMethods.init(songs)
+    #playlist_id = src.services.YoutubeMethods.init(songs)
+    playlist_id = "PLmgnf_5CScgUAB0-8EsBXX-XkQ3T6suBh"
     print('Creating playlist...')
     return jsonify(playlist_id)
 

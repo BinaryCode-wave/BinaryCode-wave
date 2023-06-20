@@ -1,7 +1,124 @@
-#data {
-    display: none;
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url(../img/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.titulo {
+    color: #FF0000;
+    text-align: center;
+}
+
+#no_data {
+    border-style: solid;
+    border-color: rgb(119, 0, 255);
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+#create_table {
+    align-self: center;
+}
+
+.range {
+    width: 50%;
+    display: flex;;
+    align-items: center;
+    gap: 10px;
 }
 
 #customRange2 {
     width: 50%;
+}
+
+#data {
+    display: none;
+}
+
+.elements {
+    /* display: flex;
+    justify-content: space-around; */
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    margin: 30px;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Music player */
+#music_player {
+    border-style: solid;
+    border-color: red;
+    background-color: #F0F0F3;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    /* width: fit-content; */
+}
+
+.track-img {
+    width: 250px;
+    height: 250px;
+    align-self: center;
+    border-radius: 50%;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+}
+
+#play {
+    background-image: url(../img/play.png);
+}
+
+#play.running {
+    background-image: url(../img/pause.png);
+}
+
+#next {
+    background-image: url(../img/next.png);
+}
+
+#prev {
+    background-image: url(../img/back.png);
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#song-name {
+    font-size: 21px;
+    text-align: center;
+}
+
+#song-author {
+    font-size: 18px;
+    opacity: 0.9;
+    line-height: 35px;
+}
+
+.playerBtn {
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    padding: 0px;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
 }
