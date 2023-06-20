@@ -51,9 +51,10 @@ def notebook():
     return render_template('notebook.html', body=body)
 
 @app.route('/songs', methods=['POST'])
-def songs():
+def songsList():
     prefence_value = request.form.get('preference_value')
     df = process_dataframe(THRESHOLD=float(prefence_value))
     return render_template('songs.html', data=df.to_json(orient='records'))
+
 if __name__ == '__main__':
     app.run(debug=True)
