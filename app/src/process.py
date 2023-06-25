@@ -3,16 +3,23 @@ import numpy as np
 import networkx as nx
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics.pairwise import euclidean_distances
-import heapq as hq
 import math
+import src.algorithms.dijkstra as dj
+import src.algorithms.kruskal as kr
+import src.algorithms.floyd_warshall as fw
 
-def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_df=False, print_processed_df=False):
+def generate_df(data):
+    if not data:
+        return pd.DataFrame()
+
+    df_result = pd.DataFrame(data)
+    df_result = df_result.sort_values(by=['Cost']).reset_index(drop=True)
+    df_result = df_result.drop(columns=['Cost', 'Path'])
+    return df_result
+
+def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_info=False, print_processed_df=False, features=['Danceability', 'Loudness', 'Speechiness', 'Acousticness','Instrumentalness', 'Liveness', 'Valence', 'Tempo'], algorithm='dijkstra'):
     # Leer el archivo CSV
     df = pd.read_csv(PATH, usecols=[0, 1, 3, 4, 7, 10, 11, 12, 13, 14, 15, 16, 18], header=0, nrows=NROWS)
-
-    # Seleccionamos las características que vamos a utilizar
-    features = ['Danceability', 'Loudness', 'Speechiness', 'Acousticness',
-                'Instrumentalness', 'Liveness', 'Valence', 'Tempo']
 
     # Normalizamos los valores de las características
     scaler = MinMaxScaler()
@@ -25,8 +32,8 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
     for i in range(len(df)):
         G.add_node(i, track=df.loc[i, 'Track'])
 
-    features = df[['Danceability', 'Loudness', 'Speechiness', 'Acousticness',
-                   'Instrumentalness', 'Liveness', 'Valence', 'Tempo']].values
+    # Crea un arreglo con las características de las canciones
+    features = df[features].values
 
     # Agrega las aristas al grafo
     for i in range(len(df)):
@@ -36,57 +43,71 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
             if dist > THRESHOLD:
                 G.add_edge(i, j, weight=round(dist, 3))
 
-    def dijkstra(G, s):
-        n = len(G)
-        visited = [False] * n
-        path = [-1] * n
-        cost = [math.inf] * n
+    result_df = pd.DataFrame()
+    if algorithm == 'dijkstra':
+        # Aplicar el algoritmo de Dijkstra
+        path, cost = dj.dijkstra(nx.to_numpy_array(G), 1)
+        if print_info:
+            print("Dijkstra Path:", path)
+        # Crear un DataFrame con los resultados del algoritmo de Dijkstra
+        data = []
+        for i in range(len(path)):
+            if not math.isinf(cost[i]):  # Solo considerar las canciones que están conectadas
+                data.append({
+                    'Id': i,  # Agregar la columna 'Id' del dataset original
+                    'Track': df.loc[i, 'Track'],  # Agregar la columna 'Track' del dataset original
+                    'Artist': df.loc[i, 'Artist'],  # Agregar la columna 'Artist' del dataset original
+                    'Url_youtube': df.loc[i, 'Url_youtube'],  # Agregar la columna 'Url_youtube' del dataset original
+                    'Path': path[i],
+                    'Cost': cost[i]
+                })
 
-        cost[s] = 0
-        pqueue = [(0, s)]
-        while pqueue:
-            g, u = hq.heappop(pqueue)
-            if not visited[u]:
-                visited[u] = True
-                for v in range(n):
-                    if G[u, v] > 0 and not visited[v]:
-                        f = g + G[u, v]
-                        if f < cost[v]:
-                            cost[v] = f
-                            path[v] = u
-                            hq.heappush(pqueue, (f, v))
+        result_df = generate_df(data)
+    elif algorithm == 'kruskal':
+        # Aplicar el algoritmo de Kruskal
+        mst = kr.kruskal(G)
+        if print_info:
+            print("Kruskal MST Edges:")
+            print(list(mst.edges.data()))
+            data_kruskal = [{'Edge': str(edge[0]) + '-' + str(edge[1]), 'Weight': edge[2]} for edge in list(mst.edges.data('weight'))]
 
-        return path, cost
-
-    # Aplicar el algoritmo de Dijkstra
-    path, cost = dijkstra(nx.to_numpy_array(G), 1)
-
-    # Crear un DataFrame con los resultados del algoritmo de Dijkstra
-    data = []
-    for i in range(len(path)):
-        if not math.isinf(cost[i]):  # Solo considerar las canciones que están conectadas
-            data.append({
-                'Id': i,  # Agregar la columna 'Id' del dataset original
-                'Track': df.loc[i, 'Track'],  # Agregar la columna 'Track' del dataset original
-                'Artist': df.loc[i, 'Artist'],  # Agregar la columna 'Artist' del dataset original
-                'Url_youtube': df.loc[i, 'Url_youtube'],  # Agregar la columna 'Url_youtube' del dataset original
-                'Path': path[i],
-                'Cost': cost[i]
+        # Crear DataFrame para Kruskal
+        data_kruskal = []
+        for edge in list(mst.edges.data('weight')):
+            data_kruskal.append({
+                'Id': edge[0], 
+                'Track': df.loc[edge[0], 'Track'], 
+                'Artist': df.loc[edge[0], 'Artist'], 
+                'Url_youtube': df.loc[edge[0], 'Url_youtube'],
+                'Path': edge[1],  # Interpreta el nodo final de la arista como el "Path"
+                'Cost': edge[2]  # El peso de la arista es interpretado como el "Cost"
             })
+        return generate_df(data_kruskal)
+    else:
+        # Aplicar el algoritmo de Floyd-Warshall
+        dist_matrix = fw.floyd_warshall(G)
+        if print_info:
+            print("Floyd-Warshall Distance Matrix:")
+            print(np.array(dist_matrix))
+        # Crear DataFrame para Floyd-Warshall
+        data_floyd_warshall = []
 
-    df_result = pd.DataFrame(data)
+        for i in range(len(dist_matrix)):
+            for j in range(len(dist_matrix[i])):
+                if i != j and dist_matrix[i][j] < THRESHOLD * 1.8:  # No considerar la distancia de un nodo a sí mismo
+                    data_floyd_warshall.append({
+                        'Id': i,
+                        'Track': df.loc[i, 'Track'], 
+                        'Artist': df.loc[i, 'Artist'], 
+                        'Url_youtube': df.loc[i, 'Url_youtube'],
+                        'Path': j,  # Interpreta el nodo destino como el "Path"
+                        'Cost': dist_matrix[i][j]  # La distancia más corta es interpretada como el "Cost"
+                    })
+        return generate_df(data_floyd_warshall)
 
-    # Ordenar el DataFrame de acuerdo con el camino encontrado por el algoritmo de Dijkstra
-    df_result = df_result.sort_values(by=['Cost'])#.reset_index(drop=True)
-    if print_df:
-      print(df_result)
-
-    df_result = df_result.sort_values(by=['Cost']).reset_index(drop=True)
-    df_result = df_result.drop(columns=['Cost', 'Path'])
     if print_processed_df:
-      print(df_result)
-    return df_result
+        print(result_df)
+    return result_df 
 
-#process_dataframe(print_df=False, print_processed_df=False)
 if __name__ == '__main__':
-    process_dataframe(print_df=False, print_processed_df=False)
+    process_dataframe()

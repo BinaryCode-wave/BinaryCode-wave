@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import time
-import src.services.YoutubeMethods
+#import src.services.YoutubeMethods
 import nbformat
 from nbconvert import HTMLExporter
 from src.process import process_dataframe
@@ -54,6 +54,11 @@ def notebook():
 def songsList():
     prefence_value = request.form.get('preference_value')
     df = process_dataframe(THRESHOLD=float(prefence_value))
+    return render_template('songs.html', data=df.to_json(orient='records'))
+
+@app.route('/ss')
+def songsTest():
+    df = process_dataframe(THRESHOLD=float(1.0), algorithm='at')
     return render_template('songs.html', data=df.to_json(orient='records'))
 
 if __name__ == '__main__':
