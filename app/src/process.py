@@ -62,7 +62,7 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
     result_df = pd.DataFrame()
     if algorithm == 'dijkstra':
         # Aplicar el algoritmo de Dijkstra
-        path, cost = dj.dijkstra(nx.to_numpy_array(G), 1)
+        path, cost = dj.dijkstra(nx.to_numpy_array(G), id)
         if print_info:
             print("Dijkstra Path:", path)
         # Crear un DataFrame con los resultados del algoritmo de Dijkstra

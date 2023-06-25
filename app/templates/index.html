@@ -7,7 +7,7 @@
     <form>
         <div class="row">
             <div class="col">
-                <input type="text" class="form-control" placeholder="Favorite song">
+                <input type="text" id="start_node" class="form-control" placeholder="Favorite song">
             </div>
             <div class="col">
                 <input  type="text" id="tags-input" class="form-control" placeholder="Unwanted artists"/>
@@ -17,8 +17,8 @@
         <div class="input-group mb-3">
             <select class="form-select" id="inputGroupSelect02">
                 <option selected>dijkstra</option>
-                <option value="2">kruskal</option>
-                <option value="3">floyd_warshall</option>
+                <option value="kruskal">kruskal</option>
+                <option value="floyd_warshall">floyd_warshall</option>
             </select>
             <label class="input-group-text" for="inputGroupSelect02">Algorithm</label>
         </div>
@@ -47,6 +47,5 @@
         <button type="button" class="btn btn-danger btn-lg">Restart</button>
     </div>
 </div>
-
 
 {% endblock %}

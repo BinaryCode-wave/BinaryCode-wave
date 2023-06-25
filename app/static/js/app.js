@@ -1,37 +1,75 @@
 /* Data Section */
+urlList = [];
 function create_table(data) {
     body = document.getElementById("table_body");
     data.forEach(element => {
-        var html = "<tr><td>" + element.name + "</td><td>" + element.url + "</td></tr>"
+        var html = "<tr><td>" + element.Id + "</td>" + "<td>" + element.Track + "</td>" + "<td>" + element.Artist + "</td></tr>"
         body.innerHTML += html;
+        urlList.push(element.Url_youtube);
     });
 }
 
-/* document.getElementById("create_table").addEventListener("click", () => {
-    value = document.getElementById("customRange2").value;
-    fetch("/notebook", {
-        method: "GET",
+var filter = [];
+document.addEventListener('DOMContentLoaded', function () {
+    var input = document.getElementById('tags-input');
+    var tagify = new Tagify(input);
+
+    tagify.on('add', function (e) {
+        var tagValue = e.detail.data.value;
+        filter.push(tagValue);
     });
-}); */
+
+    tagify.on('remove', function (e) {
+        var tagValue = e.detail.data.value;
+        var index = filter.indexOf(tagValue);
+        if (index !== -1) {
+            filter.splice(index, 1);
+        }
+    });
+});
 
 document.getElementById("create_table").addEventListener("click", () => {
     value = document.getElementById("customRange2").value;
-    fetch("/data?value=" + value, {
-        method: "POST",
-    }).then(response => response.json()).
-        then((data) => {
-            document.getElementById("no_data").style.display = "none";
-            create_table(data);
-            var table = document.getElementById("data");
-            table.style.display = "block";
+    song = document.getElementById("start_node").value;
+    algorithm = document.getElementById("inputGroupSelect02").value;
 
-        });
+    var data = {
+        favorite_track: song,
+        intensity: value,
+        filter: filter,
+        algorithm: algorithm
+    };
+
+    fetch('/songs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json()).then((data) => {
+        document.getElementById("no_data").style.display = "none";
+        create_table(data);
+        var table = document.getElementById("data");
+        table.style.display = "block";
+    }).catch(function (error) {
+        console.error(error);
+    });
 });
 
 /* Create Playlist */
 
 async function create_playlist() {
-    const response = await fetch("/create_playlist", { method: "POST" });
+    var data = {
+        urls: urlList
+    }
+    console.log(data)
+    const response = await fetch("/create_playlist", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
     const id = await response.json();
     return id;
 }
@@ -41,9 +79,11 @@ document.getElementById("make_playlist").addEventListener("click", () => {
     create_playlist().then((id) => {
         playlistId = id;
         document.addEventListener("DOMContentLoaded", cargarAPI());
+        //window.open('https://www.youtube.com/playlist?list='+playlistId, '_blank');
         console.log(playlistId)
     });
 });
+
 /* Youtube Section */
 var prevTrackBtn = document.getElementById("prev");
 var nextTrackBtn = document.getElementById("next");
@@ -135,25 +175,3 @@ function onPlayerStateChange(event) {
         getTrackData();
     }
 }
-
-var filter = [];
-document.addEventListener('DOMContentLoaded', function () {
-    var input = document.getElementById('tags-input');
-    var tagify = new Tagify(input);
-
-    tagify.on('add', function (e) {
-        var tagValue = e.detail.data.value;
-        filter.push(tagValue);
-        console.log(filter);
-    });
-
-    tagify.on('remove', function (e) {
-        var tagValue = e.detail.data.value;
-        var index = filter.indexOf(tagValue);
-        if (index !== -1) {
-            filter.splice(index, 1);
-        }
-
-        console.log(filter);
-    });
-});
