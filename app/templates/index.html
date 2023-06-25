@@ -1,51 +1,68 @@
-{% extends './base.html' %}
-
-{% block title %}MusicMatch{% endblock %}
-{% block content %}
+{% extends './base.html' %} {% block title %}MusicMatch{% endblock %} {% block
+content %}
 <div id="no_data">
-    <h2>Please select your preference value</h2>
-    <form>
-        <div class="row">
-            <div class="col">
-                <input type="text" id="start_node" class="form-control" placeholder="Favorite song">
-            </div>
-            <div class="col">
-                <input  type="text" id="tags-input" class="form-control" placeholder="Unwanted artists"/>
-            </div>
-        </div>
+  <form>
+    <div class="row">
+      <div class="col">
+        <input
+          type="text"
+          id="start_node"
+          class="form-control space"
+          placeholder="Favorite song"
+        />
+      </div>
+      <div class="col">
+        <input
+          type="text"
+          id="tags-input"
+          class="form-control space"
+          placeholder="Unwanted artists"
+        />
+      </div>
+    </div>
 
-        <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect02">
-                <option selected>dijkstra</option>
-                <option value="kruskal">kruskal</option>
-                <option value="floyd_warshall">floyd_warshall</option>
-            </select>
-            <label class="input-group-text" for="inputGroupSelect02">Algorithm</label>
-        </div>
+    <div class="input-group mb-3">
+      <select class="form-select space" id="inputGroupSelect02">
+        <option selected>Dijkstra</option>
+        <option value="kruskal">Kruskal</option>
+        <option value="floyd_warshall">Floyd-Warshall</option>
+      </select>
+      <label class="input-group-text" for="inputGroupSelect02">Algorithm</label>
+    </div>
 
-        <div class="range input-group mb-3">
-            <label for="customRange1" class="form-label">Filter intensity</label>
-            <input type="range" class="form-range" value="0" min="0" max="2" step="0.001" id="customRange2"
-                oninput="this.nextElementSibling.value = this.value">
-            <output>0</output>
-        </div>
-    </form>
-    <button type="button" class="btn btn-primary btn-lg" id="create_table">Create playlist</button>
+    <div class="range input-group mb-3">
+      <label for="customRange1" class="form-label">Filter intensity</label>
+      <input
+        type="range"
+        class="form-range"
+        value="0"
+        min="0"
+        max="2"
+        step="0.001"
+        id="customRange2"
+        oninput="this.nextElementSibling.value = this.value"
+      />
+      <output>0</output>
+    </div>
+  </form>
+  <button type="button" class="btn btn-primary btn-lg" id="create_table">
+    Create playlist
+  </button>
 </div>
 
-
 <div id="data">
-    <h2>This is your new playlist</h2>
-    <div class="elements">
-        {% include 'data_table.html' %}
-        {% include 'player.html' %}
-    </div>
+  <h2>This is your new playlist</h2>
+  <div class="elements">
+    {% include 'data_table.html' %} {% include 'player.html' %}
+  </div>
 
-    <div class="buttons">
-        <button type="button" class="btn btn-primary" id="make_playlist">Play</button>
-        <button type="button" class="btn btn-info btn-lg">See graph</button>
-        <button type="button" class="btn btn-danger btn-lg">Restart</button>
-    </div>
+  <div class="buttons">
+    <button type="button" class="btn btn-primary" id="make_playlist">
+      Play
+    </button>
+    <button type="button" class="btn btn-info btn-lg">See graph</button>
+    <button type="button" class="btn btn-danger btn-lg">Restart</button>
+  </div>
 </div>
 
 {% endblock %}

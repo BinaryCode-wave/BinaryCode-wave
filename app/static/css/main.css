@@ -1,129 +1,198 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    padding: 0;
-    background-image: url(../img/background.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 100vh;
-}
-
-.titulo {
-    color: #FF0000;
-    text-align: center;
-}
-
-#no_data {
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-}
-
-#create_table {
-    align-self: center;
+  margin: 0;
+  padding: 0;
+  background-image: url(../img/background.jpg);
+  background-size: cover;
+  background-repeat:repeat-y;
+  background-position: center;
+  height: 100vh;
 }
 
 .range {
-    width: 50%;
-    display: flex;;
-    align-items: center;
-    gap: 10px;
+  justify-content: center;
+}
+
+.titulo {
+  font-weight: bold;
+  color: #e00000;
+  text-align: center;
+  font-size: 5em;
+  margin: 20px 10px 0 10px;
+}
+
+.subtitulo {
+  font-weight: bold;
+  color: #505050;
+  text-align: center;
+  font-size: 2em;
+}
+
+#no_data {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+
+#create_table {
+  align-self: center;
+  background: #8affb9;
+  color: #2d3047;
+  font-weight: bold;
+  border: none;
+  width: 300px;
+}
+
+#create_table:hover {
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+.range {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #customRange2 {
-    width: 50%;
+  width: 50%;
 }
 
 #data {
-    display: none;
+  display: none;
 }
 
 .elements {
-    /* display: flex;
+  /* display: flex;
     flex-direction: column;
     gap: 10px; */
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    justify-content: center;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  justify-content: center;
 }
 
 .data_table {
-    max-height: 450px;
-    overflow: auto;
+  max-height: 450px;
+  overflow: auto;
 }
 
 .buttons {
-    display: flex;
-    margin: 30px;
-    justify-content: center;
-    gap: 30px;
+  display: flex;
+  margin: 30px;
+  justify-content: center;
+  gap: 30px;
 }
 
 /* Music player */
 #music_player {
-    border-style: solid;
-    border-color: red;
-    background-color: #F0F0F3;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    max-height: 450px;
-    display: flex;
-    flex-direction: column;
-    /* width: fit-content; */
+  border-style: solid;
+  border-color: red;
+  background-color: #f0f0f3;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  max-height: 450px;
+  display: flex;
+  flex-direction: column;
+  /* width: fit-content; */
 }
 
 .track-img {
-    width: 250px;
-    height: 250px;
-    align-self: center;
-    border-radius: 50%;
+  width: 250px;
+  height: 250px;
+  align-self: center;
+  border-radius: 50%;
 }
 
 .controls {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 #play {
-    background-image: url(../img/play.png);
+  background-image: url(../img/play.png);
 }
 
 #play.running {
-    background-image: url(../img/pause.png);
+  background-image: url(../img/pause.png);
 }
 
 #next {
-    background-image: url(../img/next.png);
+  background-image: url(../img/next.png);
 }
 
 #prev {
-    background-image: url(../img/back.png);
+  background-image: url(../img/back.png);
 }
 
 .track-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #song-name {
-    font-size: 21px;
-    text-align: center;
+  font-size: 21px;
+  text-align: center;
 }
 
 #song-author {
-    font-size: 18px;
-    opacity: 0.9;
-    line-height: 35px;
+  font-size: 18px;
+  opacity: 0.9;
+  line-height: 35px;
 }
 
 .playerBtn {
-    background-size: cover;
-    width: 50px;
-    height: 50px;
-    padding: 0px;
-    border: none;
-    cursor: pointer;
-    background-color: transparent;
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+#nav {
+  padding: 5px 10px;
+}
+
+.navbar-brand {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#no_data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  width: 700px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+}
+
+.col {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.btn {
+  margin-top: 15px;
+}
+
+.space {
+  height: 50px;
 }
