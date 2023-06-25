@@ -56,9 +56,9 @@ def songsList():
     df = process_dataframe(THRESHOLD=float(prefence_value))
     return render_template('songs.html', data=df.to_json(orient='records'))
 
-@app.route('/ss')
+@app.route('/songstest')
 def songsTest():
-    df = process_dataframe(THRESHOLD=float(1.0), algorithm='at')
+    df = process_dataframe(THRESHOLD=float(1.5), algorithm='dijsktra')
     return render_template('songs.html', data=df.to_json(orient='records'))
 
 if __name__ == '__main__':
