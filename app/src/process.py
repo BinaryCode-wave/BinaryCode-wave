@@ -17,9 +17,24 @@ def generate_df(data):
     df_result = df_result.drop(columns=['Cost', 'Path'])
     return df_result
 
-def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_info=False, print_processed_df=False, features=['Danceability', 'Loudness', 'Speechiness', 'Acousticness','Instrumentalness', 'Liveness', 'Valence', 'Tempo'], algorithm='dijkstra'):
+def find_id(data, track):
+    id = data[data['Track'] == track]['index']
+    if id.empty:
+        return -1
+    else:
+        return id.values[0]
+
+def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_info=False, print_processed_df=False, features=['Danceability', 'Loudness', 'Speechiness', 'Acousticness','Instrumentalness', 'Liveness', 'Valence', 'Tempo'], algorithm='dijkstra', song="", filter_artists=[]):
     # Leer el archivo CSV
     df = pd.read_csv(PATH, usecols=[0, 1, 3, 4, 7, 10, 11, 12, 13, 14, 15, 16, 18], header=0, nrows=NROWS)
+
+    # Filtramos las artitas que no se requieran
+    if filter_artists:
+        new_df = df[~df['Artist'].isin(filter_artists)].copy()
+        df = new_df
+        
+    #Buscamos el id de la cancion
+    id = find_id(df, song)
 
     # Normalizamos los valores de las características
     scaler = MinMaxScaler()
@@ -29,19 +44,20 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
     G = nx.Graph()
 
     # Agrega los nodos al grafo
-    for i in range(len(df)):
-        G.add_node(i, track=df.loc[i, 'Track'])
+    for index, row in df.iterrows():
+        G.add_node(row['index'], name=row['Track'], artist=row['Artist'])
 
     # Crea un arreglo con las características de las canciones
     features = df[features].values
 
     # Agrega las aristas al grafo
-    for i in range(len(df)):
-        for j in range(i + 1, len(df)):
+    nodes = list(G.nodes)
+    for i in range(len(nodes)):
+        for j in range(i + 1, len(nodes)):
             dist = euclidean_distances([features[i]], [features[j]])[0][0]
             dist = 2 - dist
             if dist > THRESHOLD:
-                G.add_edge(i, j, weight=round(dist, 3))
+                G.add_edge(nodes[i], nodes[j], weight=round(dist, 3))
 
     result_df = pd.DataFrame()
     if algorithm == 'dijkstra':
@@ -54,10 +70,10 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
         for i in range(len(path)):
             if not math.isinf(cost[i]):  # Solo considerar las canciones que están conectadas
                 data.append({
-                    'Id': i,  # Agregar la columna 'Id' del dataset original
-                    'Track': df.loc[i, 'Track'],  # Agregar la columna 'Track' del dataset original
-                    'Artist': df.loc[i, 'Artist'],  # Agregar la columna 'Artist' del dataset original
-                    'Url_youtube': df.loc[i, 'Url_youtube'],  # Agregar la columna 'Url_youtube' del dataset original
+                    'Id': nodes[i],  # Agregar la columna 'Id' del dataset original
+                    'Track': df.loc[nodes[i], 'Track'],  # Agregar la columna 'Track' del dataset original
+                    'Artist': df.loc[nodes[i], 'Artist'],  # Agregar la columna 'Artist' del dataset original
+                    'Url_youtube': df.loc[nodes[i], 'Url_youtube'],  # Agregar la columna 'Url_youtube' del dataset original
                     'Path': path[i],
                     'Cost': cost[i]
                 })

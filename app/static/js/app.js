@@ -135,3 +135,25 @@ function onPlayerStateChange(event) {
         getTrackData();
     }
 }
+
+var filter = [];
+document.addEventListener('DOMContentLoaded', function () {
+    var input = document.getElementById('tags-input');
+    var tagify = new Tagify(input);
+
+    tagify.on('add', function (e) {
+        var tagValue = e.detail.data.value;
+        filter.push(tagValue);
+        console.log(filter);
+    });
+
+    tagify.on('remove', function (e) {
+        var tagValue = e.detail.data.value;
+        var index = filter.indexOf(tagValue);
+        if (index !== -1) {
+            filter.splice(index, 1);
+        }
+
+        console.log(filter);
+    });
+});

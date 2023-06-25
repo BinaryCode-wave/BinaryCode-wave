@@ -10,40 +10,30 @@
                 <input type="text" class="form-control" placeholder="Favorite song">
             </div>
             <div class="col">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Discart genres
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="opcion1"> Opción 1
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="opcion2"> Opción 2
-                            </label>
-                        </li>
-                        <li>
-                            <label class="dropdown-item">
-                                <input type="checkbox" value="opcion3"> Opción 3
-                            </label>
-                        </li>
-                    </ul>
-                </div>
+                <input  type="text" id="tags-input" class="form-control" placeholder="Unwanted artists"/>
             </div>
         </div>
-        <div class="range">
+
+        <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect02">
+                <option selected>dijkstra</option>
+                <option value="2">kruskal</option>
+                <option value="3">floyd_warshall</option>
+            </select>
+            <label class="input-group-text" for="inputGroupSelect02">Algorithm</label>
+        </div>
+
+        <div class="range input-group mb-3">
             <label for="customRange1" class="form-label">Filter intensity</label>
             <input type="range" class="form-range" value="0" min="0" max="2" step="0.001" id="customRange2"
                 oninput="this.nextElementSibling.value = this.value">
             <output>0</output>
         </div>
     </form>
-    <button  type="button" class="btn btn-primary btn-lg" id="create_table">Create playlist</button> 
+    <button type="button" class="btn btn-primary btn-lg" id="create_table">Create playlist</button>
 </div>
+
+
 <div id="data">
     <h2>This is your new playlist</h2>
     <div class="elements">
@@ -57,4 +47,6 @@
         <button type="button" class="btn btn-danger btn-lg">Restart</button>
     </div>
 </div>
+
+
 {% endblock %}
