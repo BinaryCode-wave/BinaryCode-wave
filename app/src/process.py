@@ -36,6 +36,9 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
     #Buscamos el id de la cancion
     id = find_id(df, song)
 
+    if id == -1:
+        return -1
+
     # Normalizamos los valores de las características
     scaler = MinMaxScaler()
     df[features] = scaler.fit_transform(df[features])

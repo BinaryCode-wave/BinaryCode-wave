@@ -46,13 +46,24 @@ document.getElementById("create_table").addEventListener("click", () => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    }).then(response => response.json()).then((data) => {
+    }).then(response => {
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('No se encontró el dato solicitado');
+            } else {
+                throw new Error('Error en la solicitud');
+            }
+        }
+        return response.json();
+    }).then((data) => {
         document.getElementById("no_data").style.display = "none";
+        document.getElementById("error").style.display = "none";
         create_table(data);
         var table = document.getElementById("data");
         table.style.display = "block";
     }).catch(function (error) {
-        console.error(error);
+        document.getElementById("error").style.display = "block";
+        console.error(error.message);
     });
 });
 
@@ -82,6 +93,10 @@ document.getElementById("make_playlist").addEventListener("click", () => {
         //window.open('https://www.youtube.com/playlist?list='+playlistId, '_blank');
         console.log(playlistId)
     });
+});
+
+document.getElementById("restart").addEventListener("click", () => {
+    location.reload();
 });
 
 /* Youtube Section */

@@ -33,6 +33,10 @@ body {
   font-size: 2em;
 }
 
+#error  {
+  display: none;
+}
+
 #no_data {
   display: flex;
   flex-direction: column;

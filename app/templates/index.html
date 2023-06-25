@@ -23,7 +23,7 @@ content %}
 
     <div class="input-group mb-3">
       <select class="form-select space" id="inputGroupSelect02">
-        <option selected>Dijkstra</option>
+        <option value="dijkstra" selected>Dijkstra</option>
         <option value="kruskal">Kruskal</option>
         <option value="floyd_warshall">Floyd-Warshall</option>
       </select>
@@ -50,18 +50,24 @@ content %}
   </button>
 </div>
 
+<div id="error">
+  <div class="alert alert-danger" role="alert">
+    The song you are looking for does not exist in our dataset.
+  </div>
+</div>
+
 <div id="data">
   <h2>This is your new playlist</h2>
   <div class="elements">
     {% include 'data_table.html' %} {% include 'player.html' %}
-  </div>
+</div>
 
   <div class="buttons">
     <button type="button" class="btn btn-primary" id="make_playlist">
       Play
     </button>
-    <button type="button" class="btn btn-info btn-lg">See graph</button>
-    <button type="button" class="btn btn-danger btn-lg">Restart</button>
+    <button type="button" class="btn btn-info btn-lg" id="graph">See graph</button>
+    <button type="button" class="btn btn-danger btn-lg" id="restart" >Restart</button>
   </div>
 </div>
 
