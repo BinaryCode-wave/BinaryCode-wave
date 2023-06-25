@@ -1,8 +1,9 @@
 import src.services.YoutubeAPI as yt
+from decouple import config
 
 api_service_name = "youtube"
 api_version = "v3"
-client_secrets_file = "YOUR_CLIENT_SECRET_FILE.json"
+client_secrets_file = config("CLIENT_CREDENTIALS") #"YOUR_CLIENT_SECRET_FILE.json"
 scopes = scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 youtube = yt.create_service(client_secrets_file, api_service_name, api_version, scopes)
 
