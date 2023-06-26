@@ -1,5 +1,6 @@
 import math
 import heapq as hq
+
 def dijkstra(G, s):
     n = len(G)
     visited = [False] * n

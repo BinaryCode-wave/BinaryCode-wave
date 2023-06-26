@@ -1,8 +1,8 @@
 from flask import Flask, render_template, jsonify, request, abort
-import src.services.YoutubeMethods
+#import src.services.YoutubeMethods
 import nbformat
 from nbconvert import HTMLExporter
-from src.process import process_dataframe
+from src.process import process_dataframe, export_graph
 
 app = Flask(__name__)
 
@@ -28,8 +28,8 @@ def not_found_error(error):
 def create_playlist():
     datos = request.get_json()
     songs = datos.get('urls')
-    #playlist_id = src.services.YoutubeMethods.init(songs)
-    playlist_id = "PLmgnf_5CScgUAB0-8EsBXX-XkQ3T6suBh" 
+    playlist_id = src.services.YoutubeMethods.init(songs)
+    #playlist_id = "PLmgnf_5CScgUAB0-8EsBXX-XkQ3T6suBh" 
     print('Creating playlist...')
     return jsonify(playlist_id)
 
