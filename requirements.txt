@@ -101,3 +101,6 @@ Werkzeug==2.3.4
 widgetsnbextension==4.0.7
 python-decouple == 3.8
 python-dotenv == 1.0.0
+google-api-python-client == 2.90.0
+google-auth-oauthlib == 1.0.0
+google-auth-httplib2 == 0.1.0
