@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import networkx as nx
@@ -7,7 +8,7 @@ import math
 import src.algorithms.dijkstra as dj
 import src.algorithms.kruskal as kr
 import src.algorithms.floyd_warshall as fw
-
+import matplotlib.pyplot as plt
 def generate_df(data):
     if not data:
         return pd.DataFrame()
@@ -23,6 +24,14 @@ def find_id(data, track):
         return -1
     else:
         return id.values[0]
+    
+def export_graph(graph, algorithm):
+    plt.figure(figsize=(10, 6))
+    pos = nx.spring_layout(graph)
+    nx.draw_networkx(graph, pos=pos, with_labels=True, node_size=500, font_size=8)
+    plt.title(f"{algorithm} Graph")
+    img_path = os.path.join("app", "static", "img", "graph_applied.png")
+    plt.savefig(img_path)
 
 def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Mendoza_Ramirez_500.csv", print_info=False, print_processed_df=False, features=['Danceability', 'Loudness', 'Speechiness', 'Acousticness','Instrumentalness', 'Liveness', 'Valence', 'Tempo'], algorithm='dijkstra', song="", filter_artists=[]):
     # Leer el archivo CSV
@@ -82,6 +91,7 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
                 })
 
         result_df = generate_df(data)
+        export_graph(G, "dijkstra")
     elif algorithm == 'kruskal':
         # Aplicar el algoritmo de Kruskal
         mst = kr.kruskal(G)
@@ -101,6 +111,7 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
                 'Path': edge[1],  # Interpreta el nodo final de la arista como el "Path"
                 'Cost': edge[2]  # El peso de la arista es interpretado como el "Cost"
             })
+        export_graph(mst, "kruskal")
         return generate_df(data_kruskal)
     else:
         # Aplicar el algoritmo de Floyd-Warshall
@@ -122,7 +133,9 @@ def process_dataframe(NROWS=30, THRESHOLD=1.5, PATH="app/data/Dataset_Huaman_Men
                         'Path': j,  # Interpreta el nodo destino como el "Path"
                         'Cost': dist_matrix[i][j]  # La distancia más corta es interpretada como el "Cost"
                     })
+        export_graph(G, "floyd_warshall")
         return generate_df(data_floyd_warshall)
+
 
     if print_processed_df:
         print(result_df)

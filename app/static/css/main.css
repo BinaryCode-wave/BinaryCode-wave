@@ -12,6 +12,7 @@ body {
   background-repeat:repeat-y;
   background-position: center;
   height: 100vh;
+  color: #2d3047;
 }
 
 .range {
@@ -28,7 +29,7 @@ body {
 
 .subtitulo {
   font-weight: bold;
-  color: #505050;
+  color: #2d3047;
   text-align: center;
   font-size: 2em;
 }
@@ -70,6 +71,11 @@ body {
 
 #data {
   display: none;
+  height: 650px;
+}
+
+#data h2{
+  font-size: 20px;
 }
 
 .elements {
@@ -79,13 +85,18 @@ body {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  margin: 10px 50px;
+  height: 500px;
 }
 
 .data_table {
   max-height: 450px;
+  width: 600px;
   overflow: auto;
 }
+
 
 .buttons {
   display: flex;
@@ -101,7 +112,7 @@ body {
   background-color: #f0f0f3;
   padding: 20px;
   border-radius: 10px;
-  max-width: 500px;
+  width: 500px;
   max-height: 450px;
   display: flex;
   flex-direction: column;

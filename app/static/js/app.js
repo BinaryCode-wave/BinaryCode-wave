@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 document.getElementById("create_table").addEventListener("click", () => {
     value = document.getElementById("customRange2").value;
     song = document.getElementById("start_node").value;
@@ -61,7 +62,8 @@ document.getElementById("create_table").addEventListener("click", () => {
         create_table(data);
         var table = document.getElementById("data");
         table.style.display = "block";
-    }).catch(function (error) {
+        }
+    ).catch(function (error) {
         document.getElementById("error").style.display = "block";
         console.error(error.message);
     });
@@ -94,6 +96,10 @@ document.getElementById("make_playlist").addEventListener("click", () => {
         console.log(playlistId)
     });
 });
+
+document.getElementById("graph").addEventListener("click",()=>{
+    document.getElementById("graph-cont").style.display = "block"
+})
 
 document.getElementById("restart").addEventListener("click", () => {
     location.reload();
@@ -173,6 +179,8 @@ function getTrackData() {
         resolve();
     });
 }
+
+
 
 function onPlayerReady() {
     getTrackData().then(() => {
