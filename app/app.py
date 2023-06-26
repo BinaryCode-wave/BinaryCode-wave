@@ -28,8 +28,8 @@ def not_found_error(error):
 def create_playlist():
     datos = request.get_json()
     songs = datos.get('urls')
-    #playlist_id = src.services.YoutubeMethods.init(songs)
-    playlist_id = "PLmgnf_5CScgUAB0-8EsBXX-XkQ3T6suBh" 
+    playlist_id = src.services.YoutubeMethods.init(songs)
+    #playlist_id = "PLmgnf_5CScgUAB0-8EsBXX-XkQ3T6suBh" 
     print('Creating playlist...')
     return jsonify(playlist_id)
 
