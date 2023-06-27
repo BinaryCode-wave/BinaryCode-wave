@@ -68,14 +68,11 @@ def add_video(youtube, playlist_id, video_id):
     return response
 
 def init(songs):
-    print(songs)
     playlist_id = ""
-    #created = True
     playlists = get_playlists(youtube)["items"]
     for playlist in playlists:
         if playlist["snippet"]["title"] == "TempList":
             delete_playlist(youtube, playlist["id"])
-            #created = False
             break
 
     playlist_id = create_playlist(youtube, "TempList")
